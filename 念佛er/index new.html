@@ -20,44 +20,44 @@
         <div class="win auto-mode-setting-panel">
             <div class="setting-panel-content-wrapper">
                 <h1 class="title">自動模式</h1>
-                <div class="time-amount">
+                <div class="setting-panel-content time-amount">
                     <span> 設定時間長度</span>
                     <span>
-                        <input id="time-amount" class="time-amount" inputmode="numeric" type="number" value="30" min="1" max="720" />
+                        <input id="time-amount-in-minute" class="time-amount-in-minute" inputmode="numeric" type="number" value="30" min="1" max="720" />
                         <span> 分 </span>
                     </span>
                 </div>
-                <div class="yes-no-content show-time">
+                <div class="setting-panel-content yes-no-content show-time">
                     <span>是否顯示時間</span>
-                    <div class="btn yes-no-btn" data-value="1"></div>
+                    <div class="btn yes-no-btn"></div>
                 </div>
-                <div class="yes-no-content white-noise">
+                <div class="setting-panel-content yes-no-content white-noise">
                     <span>是否加入白噪音</span>
-                    <div class="btn yes-no-btn" data-value="1"></div>
+                    <div class="btn yes-no-btn"></div>
                 </div>
-                <div class="yes-no-content chime">
+                <div class="setting-panel-content yes-no-content chime">
                     <span>是否加入頌缽</span>
-                    <div class="btn yes-no-btn" data-value="1"></div>
+                    <div class="btn yes-no-btn"></div>
                 </div>
-                <div class="chime-interval">
+                <div class="setting-panel-content chime">
                     <span>設定頌缽間隔</span>
                     <span>
                         <input id="chime-interval" class="chime-interval" inputmode="numeric" type="number" value="20" min="5" max="300" />
                         <span>秒</span>
                     </span>
                 </div>
-                <div class="yes-no-content muyu">
+                <div class="setting-panel-content yes-no-content muyu">
                     <span>是否加入木魚聲</span>
                     <div class="btn yes-no-btn yes-btn"></div>
                 </div>
-                <div class="muyu-interval">
+                <div class="setting-panel-content muyu">
                     <span>木魚聲頻率</span>
                     <span>
                         <input id="muyu-bpm" class="muyu-bpm" inputmode="numeric" type="number" value="100" min="30" max="180" />
-                        <span> BPM </span>
+                        <span>BPM</span>
                     </span>
                 </div>
-                <button class="btn submit-btn auto-mode-submit-btn">確認</button>
+                <div class="btn submit-btn auto-mode-submit-btn">確認</div>
             </div>
         </div>
         <div class="win menual-mode-setting-panel">
@@ -65,11 +65,11 @@
                 <h1 class="title">手動模式</h1>
                 <div class="yes-no-content white-noise">
                     <span>是否加入白噪音</span>
-                    <div class="btn yes-no-btn" data-value="1"></div>
+                    <div class="btn yes-no-btn"></div>
                 </div>
                 <div class="yes-no-content chime">
                     <span>是否加入頌缽</span>
-                    <div class="btn yes-no-btn" data-value="1"></div>
+                    <div class="btn yes-no-btn"></div>
                 </div>
                 <div class="chime-interval">
                     <span> 設定頌缽間隔</span>
@@ -85,7 +85,7 @@
                         <span>次</span>
                     </span>
                 </div>
-                <button class="btn submit-btn menual-mode-submit-btn">確認</button>
+                <div class="btn submit-btn menual-mode-submit-btn">確認</div>
             </div>
         </div>
         <div class="win auto-mode-main-page">
@@ -115,10 +115,10 @@
         <!-- all about audio files -->
         <script>
             // load audio files, clone to multi object to play audios at the same time
-            var muyu = new Audio('./sounds/muyu.mp3')
-            var muyuArr = [muyu, muyu.cloneNode(), muyu.cloneNode(), muyu.cloneNode()]
-            var chime = new Audio('./sounds/chime.mp3')
-            var chimeArr = [
+            let muyu = new Audio('./sounds/muyu.mp3')
+            let muyuArr = [muyu, muyu.cloneNode(), muyu.cloneNode(), muyu.cloneNode()]
+            let chime = new Audio('./sounds/chime.mp3')
+            let chimeArr = [
                 chime,
                 chime.cloneNode(),
                 chime.cloneNode(),
@@ -128,10 +128,10 @@
                 chime.cloneNode(),
                 chime.cloneNode(),
             ]
-            var chime2 = new Audio('./sounds/chime2.mp3')
+            let chime2 = new Audio('./sounds/chime2.mp3')
 
             // function of play audio
-            var mi = 0
+            let mi = 0
             playMuyu = () => {
                 if (!muyuArr[mi].paused) {
                     mi = (mi + 1) % 4
@@ -139,7 +139,7 @@
                 muyuArr[mi].play()
                 console.log('Playing muyu :', mi)
             }
-            var ci = 0
+            let ci = 0
             playChime = () => {
                 if (!chimeArr[ci].paused) {
                     ci = (ci + 1) % 8
@@ -148,10 +148,12 @@
                 console.log('Playing chime :', ci)
             }
         </script>
+        <!-- control page shown and transition -->
         <script>
             document.addEventListener('DOMContentLoaded', () => {
                 document.querySelectorAll('.yes-no-btn').forEach((btn) => {
                     btn.classList.add('yes-btn')
+                    btn.dataset.value = 1
                     btn.addEventListener('touchend', () => {
                         btn.dataset.value = !+btn.dataset.value ? 1 : 0
                         if (btn.classList.contains('yes-btn')) {
@@ -164,14 +166,14 @@
                     })
                 })
             })
-            var modeChosenPage = document.querySelector('.mode-chosen-page')
-            var autoModeSettingPanel = document.querySelector('.auto-mode-setting-panel')
-            var menualModeSettingPanel = document.querySelector('.menual-mode-setting-panel')
-            var autoModeMainPage = document.querySelector('.auto-mode-main-page')
-            var menualModeMainPage = document.querySelector('.menual-mode-main-page')
-            var goPrevPageBtn = document.querySelector('.go-prev-page-btn')
+            let modeChosenPage = document.querySelector('.mode-chosen-page')
+            let autoModeSettingPanel = document.querySelector('.auto-mode-setting-panel')
+            let menualModeSettingPanel = document.querySelector('.menual-mode-setting-panel')
+            let autoModeMainPage = document.querySelector('.auto-mode-main-page')
+            let menualModeMainPage = document.querySelector('.menual-mode-main-page')
+            let goPrevPageBtn = document.querySelector('.go-prev-page-btn')
 
-            var current_page = 0
+            let current_page = 0
 
             hideWin = () => {
                 document.querySelectorAll('.win').forEach((win) => {
@@ -210,6 +212,39 @@
             document.querySelector('.auto-mode-submit-btn').addEventListener('touchend', () => {
                 hideWin()
                 showAutoModeMainPage()
+
+                let timeAmountInMinute = +document.querySelector('.auto-mode-setting-panel .time-amount-in-minute').value
+                let isShowTime = +document.querySelector('.auto-mode-setting-panel .show-time .yes-no-btn').dataset['value']
+                let isWhiteNoise = +document.querySelector('.auto-mode-setting-panel .white-noise .yes-no-btn').dataset['value']
+                let isChime = +document.querySelector('.auto-mode-setting-panel .chime .yes-no-btn').dataset['value']
+                let chimeInterval = +document.querySelector('.auto-mode-setting-panel .chime-interval').value
+                let isMuyu = +document.querySelector('.auto-mode-setting-panel .muyu .yes-no-btn').dataset['value']
+                let muyuBPM = +document.querySelector('#muyu-bpm').value
+
+                if (!isShowTime) {
+                    document.querySelector('.left-time').style['display'] = 'none'
+                } else {
+                    document.querySelector('.left-time').style['display'] = 'block'
+                }
+                if (isWhiteNoise) {
+                    // play white noise
+                }
+                if (isChime) {
+                    let playChimeInInterval = window.setInterval(() => {
+                        playChime()
+                    }, chimeInterval * 1000)
+                }
+                if (isMuyu) {
+                    console.log((muyuBPM / 60) * 1000)
+                    let playMuyuInterval = window.setInterval(() => {
+                        playMuyu()
+                    }, (muyuBPM / 60) * 1000)
+                }
+                window.setTimeout(() => {
+                    clearInterval(playChimeInInterval)
+                    clearInterval(playMuyuInterval)
+                    console.log('time is out !')
+                }, timeAmountInMinute * 60 * 1000)
             })
             document.querySelector('.menual-mode-submit-btn').addEventListener('touchend', () => {
                 hideWin()
@@ -225,10 +260,14 @@
                     case 3:
                         hideWin()
                         showAutoModeSettingPanel()
+                        clearInterval(playChimeInInterval)
+                        clearInterval(playMuyuInterval)
                         break
                     case 4:
                         hideWin()
                         showMenualModeSettingPanel()
+                        clearInterval(playChimeInInterval)
+                        clearInterval(playMuyuInterval)
                         break
                 }
             })
