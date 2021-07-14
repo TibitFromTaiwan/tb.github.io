@@ -23,23 +23,27 @@
                 <div class="time-amount">
                     <span> 設定時間長度</span>
                     <span>
-                        <input id="chime-interval" class="count-input" inputmode="numeric" type="number" value="100" min="10" max="10000" />
+                        <input id="time-amount" class="time-amount" inputmode="numeric" type="number" value="30" min="1" max="720" />
                         <span> 分 </span>
                     </span>
                 </div>
+                <div class="yes-no-content show-time">
+                    <span>是否顯示時間</span>
+                    <div class="btn yes-no-btn" data-value="1"></div>
+                </div>
                 <div class="yes-no-content white-noise">
                     <span>是否加入白噪音</span>
-                    <div class="btn yes-no-btn"></div>
+                    <div class="btn yes-no-btn" data-value="1"></div>
                 </div>
                 <div class="yes-no-content chime">
                     <span>是否加入頌缽</span>
-                    <div class="btn yes-no-btn"></div>
+                    <div class="btn yes-no-btn" data-value="1"></div>
                 </div>
                 <div class="chime-interval">
-                    <span> 設定頌缽間隔</span>
+                    <span>設定頌缽間隔</span>
                     <span>
-                        <input id="chime-interval" class="count-input" inputmode="numeric" type="number" value="100" min="10" max="10000" />
-                        <span> 秒 </span>
+                        <input id="chime-interval" class="chime-interval" inputmode="numeric" type="number" value="20" min="5" max="300" />
+                        <span>秒</span>
                     </span>
                 </div>
                 <div class="yes-no-content muyu">
@@ -49,7 +53,7 @@
                 <div class="muyu-interval">
                     <span>木魚聲頻率</span>
                     <span>
-                        <input id="chime-interval" class="count-input" inputmode="numeric" type="number" value="100" min="10" max="10000" />
+                        <input id="muyu-bpm" class="muyu-bpm" inputmode="numeric" type="number" value="100" min="30" max="180" />
                         <span> BPM </span>
                     </span>
                 </div>
@@ -61,36 +65,95 @@
                 <h1 class="title">手動模式</h1>
                 <div class="yes-no-content white-noise">
                     <span>是否加入白噪音</span>
-                    <div class="btn yes-no-btn"></div>
+                    <div class="btn yes-no-btn" data-value="1"></div>
                 </div>
                 <div class="yes-no-content chime">
                     <span>是否加入頌缽</span>
-                    <div class="btn yes-no-btn"></div>
+                    <div class="btn yes-no-btn" data-value="1"></div>
                 </div>
                 <div class="chime-interval">
-                    <span>設定頌缽間隔</span>
+                    <span> 設定頌缽間隔</span>
                     <span>
-                        <input id="chime-interval" class="count-input" inputmode="numeric" type="number" value="100" min="10" max="10000" />
+                        <input id="chime-interval" class="chime-interval" inputmode="numeric" type="number" value="20" min="5" max="300" />
                         <span> 秒 </span>
                     </span>
                 </div>
                 <div class="fo-name-count">
                     <span>設定念佛次數</span>
                     <span>
-                        <input id="chime-interval" class="count-input" inputmode="numeric" type="number" value="100" min="10" max="10000" />
-                        <span> 秒 </span>
+                        <input id="chime-interval" class="count-input" inputmode="numeric" type="number" value="500" min="1" max="100000" />
+                        <span>次</span>
                     </span>
                 </div>
-                <div class="btn submit-btn menual-mode-submit-btn">確認</div>
+                <button class="btn submit-btn menual-mode-submit-btn">確認</button>
             </div>
         </div>
-        <div class="win auto-mode-main-page"><h1>auto mode main page</h1></div>
-        <div class="win menual-mode-main-page"><h1>menual mode main page</h1></div>
+        <div class="win auto-mode-main-page">
+            <div class="left-time">
+                <span>剩餘時間</span>
+                <span class="left-minute">0</span>
+                <span>分</span>
+                <span class="left-second">0</span>
+                <span>秒</span>
+            </div>
+        </div>
+        <div class="win menual-mode-main-page">
+            <div class="target">
+                <span>目標次數</span>
+                <span class="target-count"></span>
+                <span>次</span>
+            </div>
+            <div class="current-count">
+                <span class="current-count"></span>
+                <span>次</span>
+            </div>
+            <div class="tap-logo">
+                <h1>Tap Logo</h1>
+            </div>
+        </div>
+
+        <!-- all about audio files -->
+        <script>
+            // load audio files, clone to multi object to play audios at the same time
+            var muyu = new Audio('./sounds/muyu.mp3')
+            var muyuArr = [muyu, muyu.cloneNode(), muyu.cloneNode(), muyu.cloneNode()]
+            var chime = new Audio('./sounds/chime.mp3')
+            var chimeArr = [
+                chime,
+                chime.cloneNode(),
+                chime.cloneNode(),
+                chime.cloneNode(),
+                chime.cloneNode(),
+                chime.cloneNode(),
+                chime.cloneNode(),
+                chime.cloneNode(),
+            ]
+            var chime2 = new Audio('./sounds/chime2.mp3')
+
+            // function of play audio
+            var mi = 0
+            playMuyu = () => {
+                if (!muyuArr[mi].paused) {
+                    mi = (mi + 1) % 4
+                }
+                muyuArr[mi].play()
+                console.log('Playing muyu :', mi)
+            }
+            var ci = 0
+            playChime = () => {
+                if (!chimeArr[ci].paused) {
+                    ci = (ci + 1) % 8
+                }
+                chimeArr[ci].play()
+                console.log('Playing chime :', ci)
+            }
+        </script>
         <script>
             document.addEventListener('DOMContentLoaded', () => {
                 document.querySelectorAll('.yes-no-btn').forEach((btn) => {
                     btn.classList.add('yes-btn')
                     btn.addEventListener('touchend', () => {
+                        btn.dataset.value = !+btn.dataset.value ? 1 : 0
                         if (btn.classList.contains('yes-btn')) {
                             btn.classList.remove('yes-btn')
                             btn.classList.add('no-btn')
